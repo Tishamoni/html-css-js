@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ECMAScript 5</title>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles/base.css">
+    </head>
+    <body>
+    <textarea id="source">
+class: center, middle
+# ECMAScript 5 : A better JavaScript
+---
+
+# Resources
+* Douglas Crockford [http://crockford.com/](http://crockford.com/)
+* Crockford on JavaScript - Level 7: ECMAScript 5: The New Parts
+<i class="icon-youtube icon-large"></i>  
+[http://www.youtube.com/watch?v=UTEqr0IlFKY](http://www.youtube.com/watch?v=UTEqr0IlFKY)
+---
+
+class: center, middle
+# New syntax
+<i class="icon-warning-sign"></i> Causes error on IE &lt; 9
+---
+
+#Trailing commas
+```javascript
+{
+    "trailing": "comma",
+}
+
+// Always legal in arrays, but there're things to consider.
+[
+    "trailing",
+    "comma",
+]
+```
+---
+# Reserved word relaxation
+No reserved word restrictions on property names
+```javascript
+var a = {
+    return: true,
+    function: liberty,
+    class: 'a'
+};
+a.return = false;
+a.function();
+a.class;
+```
+---
+
+# Getters and Setters
+```javascript
+function make_person(name) {
+    return {
+        get name() {
+            return name;
+        },
+        set name(value) {
+            name = value;
+        }
+    };
+}
+var person = make_person('Fred');
+var name = person.name;
+person.name = 'Mike';
+```
+<i class="icon-frown"></i> Keep it old-school! No side-effects!
+---
+
+# Multiline string literals
+```javascript
+var long_line_1 = "This is a \
+long line"; // ok
+var long_line_2 = "This is a \ 
+long line"; // Syntax error
+```
+<i class="icon-frown"></i> Forget this thing!
+---
+
+# Constants
+* Infinity
+* NaN
+* undefined
+
+<i class="icon-warning-sign"></i> Before ES5 they were variables
+---
+
+# parseInt
+```javascript
+parseInt('08') === 8 // before ES5 result was 0
+```
+---
+
+# Regexp Literals
+**/regexp/** now produces new regular expression objects every time
+---
+
+# JSON
+* JavaScript Object Notation
+* JSON is a light-weight, language independent, data interchange format
+
+```javascript
+// text - the string to parse as JSON
+// reviver - if a function, prescribes how the value originally produced by parsing
+//           is transformed, before being returned.
+JSON.parse(text, reviver);
+
+// value - the value to convert to a JSON string.
+// replacer - If a function, transforms values and properties encountered
+//            while stringifying. If an array, specifies the set of properties
+//            included in objects in the final string.
+// space - causes the resulting string to be pretty-printed.
+JSON.stringify(value, replacer, space);
+```
+---
+
+# New methods
+* Methods can be added without breaking syntax
+---
+
+# String.prototype.trim
+* Removes whitespace from both ends of the string
+
+```javascript
+string.trim()
+```
+```javascript
+if  (!String.prototype.trim) {
+    String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g, '');
+    };
+}
+```
+---
+
+# Array.prototype.every
+* Tests whether all elements in the array pass the test implemented by the provided function
+
+```javascript
+array.every(callback[, thisObject])
+```
+```javascript
+function isBigEnough(element, index, array) {
+    return (element &gt;= 10);
+}
+var passed = [12, 5, 8, 130, 44].every(isBigEnough); // passed is false
+passed = [12, 54, 18, 130, 44].every(isBigEnough); // passed is true
+```
+---
+
+# Array.prototype.filter
+* Creates a new array with all elements that pass the test implemented by the provided function
+
+```javascript
+array.filter(callback[, thisObject])
+```
+```javascript
+function isBigEnough(element) {
+    return element &gt;= 10;
+}
+var filtered = [12, 5, 8, 130, 44].filter(isBigEnough); // filtered is [12, 130, 44]
+```
+---
+
+# Array.prototype.forEach
+* Executes a provided function once per array element
+
+```javascript
+array.forEach(callback[, thisArg])
+```
+```javascript
+function logArrayElements(element, index, array) {
+    console.log("a[" + index + "] = " + element);
+}
+[2, 5, 9].forEach(logArrayElements);
+```
+---
+
+# Array.prototype.indexOf
+* Returns the first index at which a given element can be found in the array, or -1 if it is not present
+
+```javascript
+array.indexOf(searchElement[, fromIndex])
+```
+```javascript
+var array = [2, 5, 9];
+var index = array.indexOf(2); // index is assigned 0
+index = array.indexOf(7); // index is assigned -1
+```
+---
+
+# Array.prototype.lastIndexOf
+* Returns the last index at which a given element can be found in the array, or -1 if it is not present.
+  (the array is searched backwards, starting at fromIndex)
+
+```javascript
+array.lastIndexOf(searchElement[, fromIndex])
+```
+```javascript
+var array = [2, 5, 9, 2];
+var index = array.lastIndexOf(2); // index is 3
+index = array.lastIndexOf(7); // index is -1
+index = array.lastIndexOf(2, 3); // index is 3
+index = array.lastIndexOf(2, 2); // index is 0
+index = array.lastIndexOf(2, -2); // index is 0
+index = array.lastIndexOf(2, -1); // index is 3
+```
+---
+
+# Array.prototype.map
+* Creates a new array with the results of calling a provided function on every element in this array
+
+```javascript
+array.map(callback[, thisArg]);
+```
+```javascript
+var numbers = [1, 4, 9];
+var roots = numbers.map(Math.sqrt);
+/* roots is now [1, 2, 3], numbers is still [1, 4, 9] */
+```
+---
+
+# Array.prototype.reduce
+* Apply a function against an accumulator and each value of the array (from left-to-right) as to reduce it to a single value
+
+```javascript
+array.reduce(callback[, initialValue])
+```
+```javascript
+var total = [0, 1, 2, 3].reduce(function(a, b) {
+    return a + b;
+}); // total == 6
+```
+---
+
+# Array.prototype.reduceRight
+* Apply a function simultaneously against two values of the array (from right-to-left) as to reduce it to a single value
+
+```javascript
+array.reduceRight(callback[, initialValue])
+```
+```javascript
+var flattened = [[0, 1], [2, 3], [4, 5]].reduceRight(function(a, b) {
+    return a.concat(b);
+}, []); // flattened is [4, 5, 2, 3, 0, 1]
+```
+---
+
+# Array.prototype.some
+* Tests whether some element in the array passes the test implemented by the provided function
+
+```javascript
+array.some(callback[, thisObject])
+```
+```javascript
+function isBigEnough(element, index, array) {
+    return (element &gt;= 10);
+}
+var passed = [2, 5, 8, 1, 4].some(isBigEnough); // passed is false
+passed = [12, 5, 8, 1, 4].some(isBigEnough); // passed is true
+```
+---
+
+# Date.now()
+```javascript
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+```
+---
+
+# Object.keys
+* Returns an array of a given object's own enumerable properties, in the same order as that provided by a for-in loop
+  (the difference being that a for-in loop enumerates properties in the prototype chain as well)
+
+```javascript
+Object.keys(obj)
+```
+```javascript
+var arr = ["a", "b", "c"];
+var keys = Object.keys(arr); // ["0", "1", "2"]
+var obj = { 0 : "a", 1 : "b", 2 : "c"};
+keys = Object.keys(obj); // ["0", "1", "2"]
+var fred = { name : 'Fred' };
+keys = Object.keys(fred); // ["name"]
+```
+---
+
+# Object.create
+* Creates a new object with the specified prototype object and properties
+
+```javascript
+Object.create(proto [, propertiesObject ])
+```
+```javascript
+function Person() {}
+Person.prototype.say = function (msg) {
+    return (this.name || 'Anonymous') + ' said: ' + msg;
+};
+var fred = Object.create(Person.prototype, {
+    name: { writable : true, configurable : true, value: "Fred" }
+});
+fred.say('hello'); // Fred said: hello
+```
+---
+
+# Array.isArray
+* Returns true if an object is an array, false if it is not
+
+```javascript
+Array.isArray(obj)
+```
+```javascript
+// all following calls return true
+Array.isArray([]);
+Array.isArray([1]);
+Array.isArray( new Array() );
+// Little known fact: Array.prototype itself is an array.
+Array.isArray( Array.prototype );
+
+// all following calls return false
+Array.isArray();
+Array.isArray({});
+Array.isArray(null);
+Array.isArray(undefined);
+Array.isArray(17);
+Array.isArray("Array");
+Array.isArray(true);
+Array.isArray(false);
+Array.isArray({ __proto__ : Array.prototype });
+```
+---
+
+# Meta Object API
+* Control over the attributes of the properties of the objects
+---
+
+# Two kinds of properties
+* Data properties
+* Accessor properties
+---
+
+# Attributes
+<i class="icon-warning-sign"></i> A property is a named collection of attributes
+
+*Data properties:*
+
+* value: any JavaScript value
+* writeable: boolean
+* enumerable: boolean
+* configurable: boolean
+
+*Accessor properties:*
+
+* get: function () { return value; }
+* set: function (value) {}
+
+
+<i class="icon-warning-sign"></i> once attribute is set to *false* it can't be set back to true
+---
+
+# Meta Object API methods
+```javascript
+Object.defineProperty(object, key, descriptor);
+Object.defineProperties(object, object_of_descriptors);
+Object.getOwnPropertyDescriptor(object, key);
+```
+```javascript
+var fred = Object.create(Object.prototype, {
+    name : { value : 'Fred', enumerable : true }
+});
+Object.defineProperty(fred, 'surname', {
+    value : 'Bell',
+    writeable : true,
+    enumerable : true,
+    configurable : true
+});
+var surname = fred.surname; // Bell
+Object.defineProperty(fred, 'fullName', {
+    get : function () { return this.name + ' ' + this.surname; },
+    enumerable : true
+});
+var fullName = fred.fullName; // Fred Bell
+fred.fullName = 'Mike Palmer'; // Nothing is changed, no error
+```
+---
+
+# Object extensibility
+```javascript
+// Prevents new properties from ever being added to an object
+Object.preventExtensions(object);
+// configurable is set to false, on all properties
+Object.seal(object);
+// configurable is set to false, and writable is set to false, on all properties
+Object.freeze(object);
+
+Object.isExtensible(object);
+Object.isSealed(object);
+Object.isFrozen(object);
+```
+---
+
+# Strict mode usage
+* The most important new feature in ECMAScript 5 <i class="icon-shield"></i>
+* Backward compatible pragma
+
+```javascript
+'use strict';
+```
+
+* File form. First statement in a file <i class="icon-frown"></i>
+* Function form. First statement in a function <i class="icon-smile"></i>
+---
+
+# Strict mode description
+* No more implied global variables withing functions
+* **this** is not bound to the global object by function form
+* **apply** and **call** do not default to global object
+* No **with** statement
+* Setting a *writable : false* property will throw
+* Deleting a *configurable : false* property will throw
+* Restrictions on eval
+* **eval** and **arguments** are reserved
+* **arguments** not linked to parameters
+* No more **arguments.caller** or **arguments.callee**
+* No more octal literals
+* Duplicate names in the object literal or function parameters are a syntax error
+---
+
+class: center
+# The End
+* Firefox 4 (Gecko 2), Chrome 5, IE 9, Opera 11.50, Safari 5
+
+https://github.com/kriskowal/es5-shim/
+
+![JavaScript is not funny](http://danshultz.github.io/talks/javascript_so_easy/images/javascript_not_funny.jpg)
+???
+`<!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->`
+    </textarea>
+    <footer>
+        <i class="icon-time"></i> <span id="time"></span>
+    </footer>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.4.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var slideshow = remark.create({
+            highlightLanguage : 'javascript',
+            highlightStyle : 'vs'
+        });
+    </script>
+    <script src="scripts/time.js"></script>
+    </body>
+</html>

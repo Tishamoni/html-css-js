@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>JavaScript</title>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles/base.css">
+    </head>
+    <body>
+    <textarea id="source">
+class: center, middle
+# JavaScript
+---
+
+class: center, middle
+# JavaScript and Java
+![JavaScript is not Java](http://www.blogohblog.com/wp-content/pop/2008/07/funnyjavascript.gif)
+---
+
+# ECMAScript
+* ECMA
+* Standardized version of JavaScript, called ECMAScript
+---
+
+# Gurus, books, resources
+* Douglas Crockford http://crockford.com/
+  <i class="icon-youtube-sign icon-large"></i>
+* JavaScript: The Definitive Guide, 5th Edition (by David Flanagan)
+* JavaScript: The Good Parts (by Douglas Crockford)
+* Mozilla Developer Network (MDN) https://developer.mozilla.org/
+---
+
+# <i class="icon-key"></i> Key Ideas
+* Load and go delivery
+* Loose typing
+* Objects <i class="icon-star"></i>
+* Prototypal inheritance <i class="icon-star"></i>
+* Lambda <i class="icon-star"></i>
+* Linkage through global variables
+---
+
+# Values
+* Numbers
+* Strings
+* Booleans
+* Objects
+* null
+* undefined
+---
+
+# Numbers
+* Only one number type
+* 64-bit floating point
+
+```javascript
+0.1 + 0.2 === 0.30000000000000004;
+```
+---
+
+# NaN
+* Special number: Not a Number
+
+```javascript
+typeof NaN == "number"
+```
+
+* <i class="icon-warning-sign"></i> Any operation with NaN as an input results in NaN.
+
+```javascript
+NaN == NaN; // false
+```
+---
+
+# Working with numbers
+```javascript
+Number(value);
+parseInt(value, radix);
+```
+```javascript
+Number("1notanumber") == NaN;
+parseInt("1notanumber", 10) == 1;
+```
+---
+
+# Strings
+* No character type
+* Strings are immutable
+* Similar strings are equal (==)
+
+```javascript
+'string' "string";
+string.length;
+String(value);
+```
+---
+
+# null, undefined
+* null - a value isn't anything
+* undefined - a value is not defined  
+  default value for variables and parameters  
+  the value of missing members in objects
+---
+
+# Booleans
+* true</li>
+* false</li>
+
+```javascript
+Boolean(value)
+```
+  * similar to **!!** prefix  
+  * returns true for truthy values  
+  * returns false for falsy values
+---
+
+# Falsy and truthy values
+* false
+* null
+* undefined
+* "" (empty string)
+* 0
+* NaN
+
+<i class="icon-info-sign"></i> All other values (including objects) are truthy.
+---
+
+# Objects
+* Everything (else) is an object
+* Objects like Hashtables
+* Objects are dynamic
+* Objects inherit from objects
+---
+
+# Identifiers
+* Starts with a letter or _ or $
+* By convention ids start with lower case  
+  Except for constructor functions which start with upper case
+---
+
+# Reserved words
+```javascript
+break, do, instanceof, typeof, case, else, new, var, catch, finally, return,
+void, continue, for, switch, while, debugger, function, this, with, default,
+if, throw, delete, in, try
+
+class, enum, extends, super, const, export, import
+implements, interface, let, package, private, protected, public, static, yield
+```
+---
+
+# ==, !=
+* These operators can do type coercion
+* ===, !== don't do type coercion
+
+```javascript
+(2 == '2') == true;
+(2 === '2') == false;
+```
+```javascript
+// Type coercion :( What's wrong with this thing?!
+'' == '0' // false
+0 == ''   // true
+0 == '0'  // true
+
+false == null      // false
+false == undefined // false
+null == undefined  // true
+```
+---
+
+# + operator
+* Adds or concats
+
+```javascript
+"$" + 3 + 4 == "$34"
+```
+
+* Unary operator can convert strings to numbers
+
+```javascript
++"24" == 24;
++"3" + (+"4") == 7;
+```
+---
+
+# Guard operator
+* aka *logical and*
+* If first operand is truthy  
+  then result is second operand  
+  else result is first operand
+
+```javascript
+if (a) {
+    return a.number;
+} else {
+    return a;
+}
+```
+
+* can be written as
+
+```javascript
+return a &amp;&amp; a.number;
+```
+---
+
+# Default operator
+* aka *logical or*
+* If first operand is truthy  
+  then result is first operand  
+  else result is second operand
+
+```javascript
+function greet(name) {
+    return 'Hello, ' + (name || 'anonymous') + '!';
+}
+```
+---
+
+# With statement
+```javascript
+with (o) {
+    member = null;
+}
+```
+* What this claims to be:
+
+```javascript
+o.member = null;
+```
+
+* What if there's a global variable *member*?
+
+<i class="icon-warning-sign"></i> Really bad idea to use, unless you know what you're doing
+---
+
+# var statement
+* Defines variables within a function
+* Types are not specified
+* Initial values are optional
+
+```javascript
+/* Example #1 */
+var name;
+var sum = 0;
+var a, b, c;
+var d = 'sup?', e;
+```
+
+```javascript
+/* Example #2 */
+var a = x; // no error
+var x = 3;
+```
+
+```javascript
+// Example #3
+var a, x;
+a = x;
+x = 3;
+```
+---
+
+# Functions
+* Declaration:
+
+```javascript
+// Way #1
+function sum(a, b, c) {
+    return a + b + c;
+}
+```
+```javascript
+// Way #2
+var sum = function (a, b, c) {
+    return a + b + c;
+};
+```
+
+* Usage
+
+```javascript
+sum(1, 2, 3);
+```
+---
+
+# <i class="icon-warning-sign"></i> Scope
+* In JavaScript, {blocks} don't have scope
+* Only functions have scope
+* Variables defined in a function are not visible outside of the function
+
+```javascript
+var a = 2;
+if (condition) {
+    var a = 3;
+}
+// a == 3
+```
+```javascript
+var a = 2;
+function func() {
+    var a = 3;
+}
+func();
+// a == 2
+```
+---
+
+# Return
+```javascript
+return expression;
+```
+or
+```javascript
+return;
+```
+* If there's no expression then result is **undefined**
+* Every function returns a value, no void-like thing
+* Except for constructor functions, whose default value is **this**
+
+```javascript
+function noop() {}
+noop(); // undefined
+```
+---
+
+# Object literals
+```javascript
+var empty = {};
+```
+```javascript
+var person = {name : 'Fred', surname: 'Bell'};
+var name = person.name;
+var surname = person['surname'];
+```
+```javascript
+// Maker function
+function person(name, surname) {
+    return { name: name, surname: surname };
+}
+var fred = person('Fred', 'Bell');
+fred.friend = person('Mike', 'Palmer');
+```
+```javascript
+someFunction({
+    name : 'Fred',
+    surname : 'Bell',
+    friend : {
+        name : 'Mike',
+        surname : 'Palmer'
+    }
+});
+```
+```javascript
+// Exceptions
+throw {
+    type : 'AJAX error',
+    message : '404 Resource not found'
+};
+```
+---
+
+# Linkage and prototypal inheritance
+* Objects created are similar to existing objects, but can be customized
+* Object customization is a lot less work than making a class, and less overhead, too.
+* Object may have a link to its prototype
+* Default prototype (if not specified) for an object is Object.prototype
+* Prototype is set during object creation
+* Can't change the link to a prototype of an object dynamically (in a standard way)
+* Storing to an object goes to that object
+
+```javascript
+function person(name, surname) {
+    return {
+        name : name,
+        surname : surname
+    };
+}
+function employee(person, salary) {
+    var empl = Object.create(person); // ECMAScript 5
+    empl.salary = salary; // prototype was not changed
+    return empl;
+}
+// fred --&gt; person --&gt; Object.prototype --&gt; null
+var fred = employee(person('Fred', 'Bell'), 1000);
+var name = fred.name;
+var salary = fred.salary;
+```
+---
+
+# Object methods
+* Objects may (and mostly) inherit from Object.prototype
+* Objects may (and mostly) inherit some basic methods
+
+```javascript
+/* Is the member, specified by name argument, is a member of this object? */
+hasOwnProperty(name);
+```
+
+* <i class="icon-warning-sign"></i> No **copy** method
+* <i class="icon-warning-sign"></i> No **equals** method
+* <i class="icon-warning-sign"></i> **==** or **===** compares only references of objects
+---
+
+# Constructor functions
+* aka *constructors*
+* Constructor functions are functions called with the **new** operator
+* By convention name starts with upper case
+
+```javascript
+function Person(name, surname) {
+    this.name = name;
+    this.surname = surname;
+}
+var fred = new Person('Fred', 'Bell');
+var name = fred.name;
+var surname = fred.surname;
+```
+---
+
+# Object.create
+* ECMAScript 5
+* Browser support: Firefox 4 (Gecko 2), Chrome 5, IE 9, Opera 11.50, Safari 5
+
+```javascript
+Object.create(proto [, propertiesObject ]);
+```
+```javascript
+var empty = Object.create(null); // pure empty object, no prototype
+typeof empty.toString === "undefined";
+
+var fred = Object.create(Object.prototype);
+fred.name = 'Fred';
+fred.surname = 'Bell';
+typeof fred.toString === "function";
+```
+---
+
+# Reference
+* Objects can be passed as arguments to functions, and can be returned by functions
+* <i class="icon-warning-sign"></i> Objects are passed by reference
+* <i class="icon-warning-sign"></i> Objects are not passed by value
+* <i class="icon-warning-sign"></i> The operators **==**, **===** compare objects by reference
+---
+
+# Delete
+* Used to delete members from objects
+
+```javascript
+delete object[member];
+delete object.member;
+```
+```javascript
+var fred = { name : 'Fred', surname : 'Bell' };
+
+delete fred.name;
+delete fred['surname'];
+typeof fred.name === 'undefined';
+typeof fred.surname === 'undefined';
+```
+---
+
+# Arrays
+* Arrays inherit from objects
+* Arrays are dynamic
+
+```javascript
+var nums = [1, 2, 3]; // array literal
+nums = new Array(1, 2, 3);
+nums.length === 3; // It's not the number of elements in array!!! WAT?!
+nums[0] === 1;
+nums[99] === undefined;
+nums[99] = 'name';
+nums.length === 100;
+
+// But! Concider this...
+delete nums[99];
+nums.length === 100;
+// Still there are only 3 values in array!!! WAT?!
+nums.splice(99, 1);
+nums.length === 99; // WAT?!
+
+// One more thing
+delete nums[1]; // [1, undefined, 3]
+nums.splice(1, 1); // [1, 3]
+```
+* There are methods: concat, join, push, pop, shift, unshift, slice, sort, splice
+* Arrays inherit from **Array.prototype**
+---
+
+# Determining the type
+* **value.constructor**
+
+```javascript
+var nums = [1, 2, 3];
+nums.constructor === Array; // true
+function Person(name, surname) {
+    this.name = name;
+    this.surname = surname;
+}
+var fred = new Person('Fred', 'Bell');
+fred.constructor === Person; // true
+fred.constructor === Object; // false
+```
+* **instanceof**
+
+```javascript
+var nums = [1, 2, 3];
+nums instanceof Array; // true
+function Person(name, surname) {
+    this.name = name;
+    this.surname = surname;
+}
+var fred = new Person('Fred', 'Bell');
+fred instanceof Person; // true
+fred instanceof Object; // true
+```
+---
+
+# **typeof** <i class="icon-frown"></i>
+```javascript
+typeof 1 === 'number';
+typeof 'abc' === 'string';
+typeof true === 'boolean';
+typeof function () {} === 'function';
+typeof {} === 'object';
+typeof [] === 'object'; // WAT?!
+// and more :(
+typeof null === 'object';
+typeof undefined === 'undefined';
+```
+---
+
+# Using functions
+* Functions inherit from **Function.prototype**
+* <i class="icon-star"></i> Functions can be used as arguments to other functions
+* <i class="icon-star"></i> Functions can be returned from other functions
+* Functions also inherit from **Object.prototype**
+* Functions can store members
+* Functions can be variadic using **arguments**
+
+```javascript
+function sum() {
+    var sum = 0;
+    for (var i = 0; i &lt; arguments.length; i++) {
+        sum += arguments[i];
+    }
+    return sum;
+}
+var result = sum(1, 2, 3); // result === 6
+
+// But!!!
+function wat() {
+    arguments.constructor; // undefined!!! WAT?!
+    arguments instanceof Array; // false!!! WAT?!
+}
+```
+* **arguments.callee**
+---
+
+# <i class="icon-warning-sign"></i> More WATS?! on the way!
+```javascript
+// Example #1
+function update(sum) {
+    typeof sum; // 'function'
+    // Some code in here
+    function sum() {}
+    // Some code in here
+}
+
+// Example #2
+typeof sum; // 'function'
+var sum = 0;
+function sum() {}
+
+// Example #3
+typeof sum; // 'undefined'
+var sum = 0;
+var sum = function () {};
+```
+<i class="icon-warning-sign"></i> Don't try this at home!!!
+---
+
+# Inner functions and closures
+* Functions can be defined inside of other functions
+* An inner function has access to the variables and parameters of functions that it is contained within.
+  This is known as Static Scoping or Lexical Scoping.
+* The scope that inner function enjoys continues even after the parent functions have returned
+ (this is called **closure**)
+
+```javascript
+function simple_curry(func, arg) {
+    return function () {
+        return func(arg, arguments[0] || 0);
+    };
+}
+function add(a, b) { return a + b; }
+var add5 = simple_curry(add, 5);
+add5(); // 5
+add5(3); // 8
+```
+---
+
+# Function objects
+* Functions are objects, so the can contain members
+* This can serve the same purpose as **static** members in other languages
+
+```javascript
+function Person(name, surname) {
+    this.name = name;
+    this.surname = surname;
+}
+Person.create = function (name, surname) {
+    return new Person(name, surname);
+};
+var fred = Person.create('Fred', 'Bell');
+var mike = Person.create('Mike');
+```
+---
+
+# More on functions
+* **thisObject.method()**
+
+```javascript
+function say(message) {
+    return this.name + ' said: ' + message;
+}
+var fred = { name : 'Fred' };
+fred.say = say;
+fred.say('Hello'); // Fred said: Hello
+
+// Wait! What if?
+say('Hello'); // " said: Hello" (not everywhere you gonna see this output)
+```
+**bind** (ECMAScript 5)
+
+```javascript
+function say(message) {
+    return (this.name || 'Anonymous') + ' said: ' + message;
+}
+say('Hello'); // Anonymous said: Hello
+var fredSays = say.bind({ name : 'Fred'});
+fredSays('Hello'); // Fred said: Hello
+```
+---
+
+# **call** and **apply** methods
+```javascript
+function say(message) {
+    return (this.name || 'Anonymous') + ' said: ' + message;
+}
+say.call({ name : 'Fred'}, 'Hello'); // Fred said: Hello
+say.apply({ name : 'Fred'}, ['Hello']); // Fred said: Hello
+
+// func.call(thisBind, args...)
+// func.apply(thisBind, argsArray)
+```
+---
+
+# Augmenting Built-in Types
+* Object.prototype
+* Array.prototype
+* Function.prototype
+* Number.prototype
+* String.prototype
+* Boolean.prototype
+
+```javascript
+// ECMAScript 5
+// IE 8 or less doesn't have trim
+if (!String.prototype.trim) {
+    String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g, '');
+    };
+}
+' a '.trim(); // 'a'
+```
+---
+
+# Inheritance
+* Classical inheritance with Object.create (ECMAScript 5)
+
+```javascript
+function Person(name, surname) {
+    this.name = name || 'Unknown';
+    this.surname = surname || 'Unknown';
+}
+Person.prototype.changeSurname = function (surname) {
+    this.surname = surname || 'Unknown';
+};
+function Employee(name, surname, salary) {
+    Person.call(this, name, surname); // call super constructor
+    this.salary = salary || 0;
+}
+// subclass extends superclass
+Employee.prototype = Object.create(Person.prototype);
+Employee.prototype.updateSalary = function (val) {
+    this.salary = this.salary + val;
+};
+var fred = new Employee('Fred', 'Bell', 1000);
+```
+---
+
+# Inheritance
+* Mixins
+
+```javascript
+function MyClass() {
+    SuperClass.call(this);
+    OtherSuperClass.call(this);
+}
+
+MyClass.prototype = Object.create(SuperClass.prototype); //inherit
+mixin(MyClass.prototype, OtherSuperClass.prototype); //mixin
+
+MyClass.prototype.myMethod = function() {
+    // do a thing
+};
+```
+---
+
+# Mixins implementation
+```javascript
+function copy(target, src) {
+    for (var prop in src) {
+        if (src.hasOwnProperty(prop)) target[prop] = src[prop];
+    }
+    return target;
+}
+function mixin(ext) {
+    return copy(copy({}, this), ext);
+}
+function Friend() {}
+Friend.prototype.listen = function () {
+    return this.name + " is listening";
+};
+function Person(name) {
+    this.name = name || 'Unknown';
+}
+var fred = new Person('Fred');
+var mike = new Person('Mike');
+fred.as = mixin;
+var friendFred = fred.as(Friend.prototype);
+friendFred.listen(); // Fred is listening
+```
+---
+
+# More
+* Douglas Crockford: The JavaScript Programming Language  
+ http://www.youtube.com/watch?v=v2ifWcnQs6M
+ <i class="icon-youtube-sign icon-large"></i>
+* Mozilla Developer Network (MDN) https://developer.mozilla.org/
+    </textarea>
+    <footer>
+        <i class="icon-time"></i> <span id="time"></span>
+    </footer>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.4.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var slideshow = remark.create({
+            highlightLanguage : 'javascript',
+            highlightStyle : 'vs'
+        });
+    </script>
+    <script src="scripts/time.js"></script>
+    </body>
+</html>

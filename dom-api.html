@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DOM API</title>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles/base.css">
+    </head>
+    <body>
+    <textarea id="source">
+class: center, middle
+# DOM API
+---
+
+# HTML (XML)
+HTML
+```html
+<div class="wide">
+    <p>Hello world</p>
+</div>
+```
+XML
+```xml
+<people>
+    <person>
+        <name>Fred</name>
+        <surname>Bell</surname>
+    </person>
+    <person>
+        <name>Mike</name>
+        <surname>Palmer</surname>
+    </person>
+</people>
+```
+---
+
+# Node and Element
+```html
+<div>Hello world!</div>
+```
+---
+
+# Welcome to the family
+* Parents, children, siblings and the root
+```html
+<div>
+    <p>Hello world</p>
+    <p>Goodbye world</p>
+</div>
+```
+---
+
+# DHTML
+Dynamic HTML (DHTML) is a term used by some vendors to describe the combination of HTML,
+style sheets and scripts that allows documents to be animated.
+---
+
+# DOM
+The Document Object Model (DOM) is an API for HTML and XML documents.
+It defines the logical structure of documents and the way a document is accessed and manipulated.
+---
+
+# W3C
+The World Wide Web Consortium (W3C) establishes a standard for the DOM, called the W3C DOM.
+---
+
+class: center, middle
+# DOM Interfaces
+---
+
+# Window
+* The **window** object implements the **Window** interface, which in turn inherits from the **AbstractView**.
+* **window** is your global.
+
+```javascript
+// myscript.js
+a = 2;
+// is the same as
+window.a = 2;
+
+// The same for functions
+alert('Hello');
+// is the same as
+window.alert('Hello');
+```
+* The **window** object represents the window itself.
+* In a tabbed browser, such as Firefox, each tab contains its own **window** object.  
+  (but some methods apply to the whole window, and not the tab itself)
+---
+
+class: center, middle
+# Traversing
+---
+
+class: center, middle
+# Finding elements
+---
+
+# Element by ID
+```javascript
+// Returns element found, or null otherwise
+document.getElementById(id)
+```
+```html
+<div id="greet">Hello world!</div>
+```
+```javascript
+var greet = document.getElementById('greet');
+```
+---
+
+# Elements by tag name
+```javascript
+// Returns elements found, or null otherwise
+elements = element.getElementsByTagName(tagName)
+```
+* *elements* is a *live* (it updates itself with the DOM tree automatically) **NodeList** of found elements
+  in the order they appear in the subtree.
+  If no elements were found, the NodeList is empty.
+* *element* is the element from where the search should start.
+  Note that only the descendants of this element are included in the search, but not the *element* itself.
+* *tagName* is the qualified name to look for.
+  The special string "*" represents all elements. For compatibility with XHTML, lower-case should be used.
+
+<i class="icon-warning-sign"></i> While the W3C DOM 3 Core specification says elements is a **NodeList** that was simply because of a an attempt to have the "core" specification not depend on the "html" specification at that time. The DOM 4 draft says that elements is an **HTMLCollection**.
+
+<i class="icon-warning-sign"></i> **element.getElementsByTagNameNS**
+---
+
+# Elements by tag name
+```html
+<div id="greet">
+    <p>Hi, Fred!</p>
+    <p>Hi, Mike!</p>
+</div>
+```
+```javascript
+var paragraphs = document.getElementsByTagName('p');
+// or
+var greet = document.getElementById('greet');
+paragraphs = greet.getElementsByTagName('p');
+
+// Working with results
+var first = paragraphs[0];
+var count = paragraphs.length;
+```
+---
+
+# Elements by class name
+```javascript
+// Returns elements found, or null otherwise
+elements = element.getElementsByClassName(names)
+```
+* *elements* is a **HTMLCollection** of found elements.
+* *names* is a string representing the list of class names to match; class names are separated by whitespace
+---
+
+# Elements by class name
+```html
+<div id="staff">
+    <div class="dev">
+        <div>Name: Fred</div>
+        <div>Surname: Bell</div>
+    </div>
+    <div class="dev">
+        <div>Name: Mike</div>
+        <div>Surname: Palmer</div>
+    </div>
+    <div class="qa">
+        <div>Name: Alice</div>
+        <div>Surname: Cooper</div>
+    </div>
+</div>
+```
+```javascript
+var developers = document.getElementsByClassName('dev');
+var fred = developers[0];
+
+var staff = document.getElementById('staff').getElementsByClassName('dev qa');
+var alice = staff[2];
+```
+---
+
+# Elements by name
+```javascript
+elements = document.getElementsByName(name)
+```
+
+* *elements* is an **HTMLCollection** of elements.
+* *name* is the value of the name attribute of the element.
+
+<i class="icon-info-sign"></i> The name attribute is only applicable to (X)HTML documents. The method returns all elements with a name attribute, such as **```<meta>```** or **```<object>```** or even if name is placed on elements which do not support a name attribute at all.
+---
+
+# Elements by name
+```html
+<p name="paragraph">Hello world!</p>
+<p name="paragraph">Bye world!</p>
+```
+```javascript
+var pars = document.getElementsByName('paragraph');
+```
+---
+
+class: center, middle
+# Selectors
+The query to find a specific element or elements in the document
+---
+
+class: center, middle
+# Selectors API
+---
+
+# Selectors API
+```javascript
+element = baseElement.querySelector(selectors)
+```
+* *element* is an element object found, or null otherwise.
+* *selectors* is a string containing one or more CSS selectors separated by commas.
+
+<i class="icon-info-sign"></i> IE 8, FF (Gecko) 3.5 (1.9.1), Opera 10, Chrome 1, Safari (webkit) 3.2 (525.3)
+---
+
+# Selectors API
+```html
+<div id="staff">
+    <div class="dev">
+        <div>Name: Fred</div>
+        <div>Surname: Bell</div>
+    </div>
+    <div class="dev">
+        <div>Name: Mike</div>
+        <div>Surname: Palmer</div>
+    </div>
+    <div class="qa">
+        <div>Name: Alice</div>
+        <div>Surname: Cooper</div>
+    </div>
+</div>
+```
+```javascript
+var staff = document.querySelector('#staff');
+var fred = staff.querySelector('.dev');
+var alice = staff.querySelector('div.qa');
+```
+---
+
+# Selectors API
+```javascript
+elementList = baseElement.querySelectorAll(selectors)
+```
+* *elementList* is a *non-live* **NodeList** of element objects.
+* *selectors* is a group of selectors to match on.
+
+<i class="icon-info-sign"></i> IE 8, FF (Gecko) 3.5 (1.9.1), Opera 10, Chrome 1, Safari (webkit) 3.2 (525.3)
+---
+
+# Selectors API
+```html
+<div id="staff">
+    <div class="dev">
+        <div>Name: Fred</div>
+        <div>Surname: Bell</div>
+    </div>
+    <div class="dev">
+        <div>Name: Mike</div>
+        <div>Surname: Palmer</div>
+    </div>
+    <div class="qa">
+        <div>Name: Alice</div>
+        <div>Surname: Cooper</div>
+    </div>
+</div>
+```
+```javascript
+var staff = document.querySelector('#staff');
+var developers = staff.querySelectorAll('.dev');
+var qas = staff.querySelectorAll('.qa');
+```
+---
+
+class: center, middle
+# Parent, Children, Siblings
+---
+
+# Working with children
+```javascript
+// Returns a live HTMLCollection containing all children of the object.
+parent.children
+// Returns the Element that is the first child of the object, null if there is none.
+parent.firstElementChild
+// Returns the Element that is the last child of the object, null if there is none.
+parent.lastElementChild
+// Returns an unsigned long giving the amount of children that the object has.
+parent.childElementCount
+```
+---
+
+# Working with siblings
+```javascript
+// Returns the Element immediately prior to the specified one in its parent's children list, or null if there is none.
+element.previousElementSibling
+// Returns the Element immediately following the specified one in its parent's children list, or null if there is none.
+element.nextElementSibling
+```
+---
+
+# Node
+```javascript
+Node.childNodes // live result
+Node.firstChild
+Node.lastChild
+Node.nextSibling
+Node.previousSibling
+Node.parentNode
+```
+```javascript
+Node.parentElement
+```
+---
+
+class: center, middle
+# Modifying the document
+---
+
+# textContent
+Text content for the element (input is escaped)
+```html
+Your name is <span id="nameElement">unknown</span><br>
+Enter your name: <input id="nameInput"> <input type="button" value="Save" onclick="save()">
+```
+```javascript
+var nameElement = document.getElementById('nameElement');
+var nameInput = document.getElementById('nameInput');
+function save() {
+    nameElement.textContent = nameInput.value;
+}
+```
+For input "Fred":
+```
+Your name is Fred
+```
+For input "```<b>Fred</b>```":
+```html
+Your name is <b>Fred</b>
+```
+In document:
+```html
+Your name is <span id="nameElement">&amp;lt;b&amp;gt;Fred&amp;lt;/b&amp;gt;</span>
+```
+---
+
+# innerHTML
+Content of the element (input is not escaped)
+```html
+Your name is <span id="nameElement">unknown</span><br>
+Enter your name: <input id="nameInput"> <input type="button" value="Save" onclick="save()">
+```
+```javascript
+var nameElement = document.getElementById('nameElement');
+var nameInput = document.getElementById('nameInput');
+function save() {
+    nameElement.innerHTML = nameInput.value;
+}
+```
+Security considerations
+```html
+<script>alert(1)</script>
+```
+<i class="icon-smile"></i> harmless in HTML5
+
+<i class="icon-warning-sign"></i> BUT
+```html
+<img src=x onerror=alert(1)>
+```
+<i class="icon-warning-sign"></i> Use with caution!!!
+---
+
+class: center, middle
+# Adding new elements
+---
+
+# Creating new elements
+```javascript
+element = document.createElement(tagName)
+```
+* *element* is the created element object.
+* *tagName* is a string that specifies the type of element to be created.
+  The nodeName of the created element is initialized with the value of tagName.  
+  <i class="icon-warning-sign"></i> Don't use qualified names (like "html:a") with this method.
+
+```javascript
+var div = document.createElement('div');
+div.textContent = 'Hello world';
+```
+* When called on a document object flagged as an HTML document, createElement lower-cases its argument prior to creating the element.
+* To create an element with a qualified name and namespace URI, use **document.createElementNS()** instead.
+---
+
+# Appending new elements
+```javascript
+child = element.appendChild(child)
+```
+* *element* is the parent element.
+* *child* is the node to append underneath element. Also returned.
+
+```javascript
+var div = document.createElement('div');
+div.textContent = 'Hello world';
+document.body.appendChild(div);
+```
+---
+
+# insertBefore
+```javascript
+insertedElement = parentElement.insertBefore(newElement, referenceElement)
+```
+* *insertedElement* - The node being inserted, that is newElement
+* *parentElement* - The parent of the newly inserted node.
+* *newElement* - The node to insert.
+* *referenceElement* - The node before which newElement is inserted.
+
+<i class="icon-info-sign"></i> If referenceElement is null, newElement is inserted at the end of the list of child nodes.
+```html
+<div id="container">
+    <div>World</div>
+</div>
+```
+```javascript
+var newDiv = document.createElement('div');
+newDiv.textContent = 'Hello';
+var div = document.getElementById('container');
+div.insertBefore(newDiv, div.firstElementChild);
+```
+---
+
+# Cloning
+```javascript
+dupNode = node.cloneNode(deep)
+```
+* *node* - The node to be cloned.
+* *dupNode* - The new node that will be a clone of node
+* *deep* (**almost Optional**) - true if the children of the node should also be cloned, or false to clone only the specified node. 
+
+<i class="icon-warning-sign"></i> cloneNode() may lead to duplicate element IDs in a document.
+---
+
+# Cloning from an external document
+```javascript
+node = document.importNode(externalNode, deep)
+```
+* *node* - The new node that is imported into the document.
+  The new node's **parentNode** is null, since it has not yet been inserted into the document tree.
+* *externalNode* - The node from another document to be imported.
+* *deep* (**almost Optional**) - A boolean, indicating whether the descendants of the imported node need to be imported.
+
+<i class="icon-warning-sign"></i> Beware of duplicate element IDs in a document.
+---
+
+class: center, middle
+# Elements with style
+---
+
+# Style
+```html
+<div id="greet" class="white-on-black">Hello, World!</div>
+```
+```javascript
+var greet = document.getElementById('greet');
+greet.style.backgroundColor = 'white';
+greet.style.color = 'black';
+```
+<i class="icon-info-sign"></i> Better use classes
+---
+
+# Classes
+```html
+<div id="greet" class="white-on-black">Hello, World!</div>
+```
+```javascript
+var greet = document.getElementById('greet');
+// the check is not necessary
+if (greet.classList.contains('white-on-black')) {
+    greet.classList.remove('white-on-black');
+    greet.classList.add('black-on-white');
+}
+```
+```javascript
+function invert(el) {
+    var classes = el.classList;
+    classes.toggle('white-on-black');
+    classes.toggle('black-on-white');
+}
+```
+---
+
+class: center, middle
+# Attributes
+---
+
+# Changing attributes
+```javascript
+element.setAttribute(name, value)
+element.getAttribute(name)
+element.hasAttribute(name)
+element.removeAttribute(name)
+```
+Predefined
+```javascript
+Element.id
+HTMLElement.lang
+HTMLElement.title
+HTMLInputElement.value
+```
+---
+
+# Removing elements
+```javascript
+oldChild = element.removeChild(child)
+```
+```html
+<div id="profile">
+    <div id="name">Fred</div>
+    <div id="surname">Bell</div>
+</div>
+```
+```javascript
+var profile = document.getElementById('profile');
+var surname = document.getElementById('surname');
+profile.removeChild(surname);
+```
+---
+
+# Replacing elements
+```javascript
+replacedNode = parentNode.replaceChild(newChild, oldChild)
+```
+```html
+<div id="profile">
+    <div id="name">Fred</div>
+    <div id="surname">Bell</div>
+</div>
+```
+```javascript
+var profile = document.getElementById('profile');
+var surname = document.getElementById('surname');
+var newSurname = document.createElement('span');
+newSurname.textContent = surname.textContent;
+profile.replaceChild(newSurname, surname);
+```
+---
+
+class: center, middle
+# Events
+---
+
+class: center, middle
+# Event flow
+---
+
+# Basic event flow
+1. Capture phase
+2. Target phase
+3. Bubble phase
+---
+
+class: center
+![Event flow](http://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.png)
+---
+
+class: center, middle
+# Listening for events
+---
+
+# HTML attribute
+```html
+<div onclick="alert(2)">Click me</div>
+```
+<i class="icon-warning-sign"></i> Cons:
+
+* Handlers must be available through global context
+* No custom events
+* Inline handlers mess up the code
+* Low control level
+---
+
+# DOM element properties
+```html
+<div class="btn" id="btn-save">Save</div>
+```
+```javascript
+var saveBtn = document.getElementById('#btn-save');
+saveBtn.onclick = function (event) {
+    // save stuff
+};
+```
+<i class="icon-warning-sign"></i> Cons:
+
+* No custom events
+---
+
+# Event listeners
+```javascript
+target.addEventListener(type, listener, useCapture);
+```
+* type - A string representing the event type to listen for.
+* *listener* - The object that receives a notification when an event of the specified type occurs.
+  This must be an object implementing the EventListener interface, or simply a JavaScript function.
+* *useCapture* - (**Almost Optional**) if true, useCapture indicates that the user wishes to initiate capture.
+
+```html
+<div class="btn" id="btn-save">Save</div>
+```
+```javascript
+var saveBtn = document.getElementById('#btn-save');
+saveBtn.addEventListener('click', function (event) {
+    // save stuff
+}, false);
+```
+<i class="icon-warning-sign"></i> IE 6-8 **element.attachEvent**
+---
+
+class: center, middle
+# Working with events
+---
+
+# Canceling event
+```javascript
+event.preventDefault()
+```
+Cancels the event if it is cancelable, without stopping further propagation of the event.
+
+#### Example:
+```html
+<a href="http://www.google.com" id="google">Go to google</a>
+```
+```javascript
+var googleLink = document.getElementById('google');
+googleLink.onclick = function (event) {
+    event.preventDefault();
+    // do some custom stuff
+};
+```
+---
+
+# Stopping event propagation
+```javascript
+event.stopPropagation()
+```
+Prevents further propagation of the current event.
+#### Example:
+```html
+<div id="test">
+    Test
+    <div id="button">Button</div>
+</div>
+```
+```javascript
+document.getElementById('test').onclick = function () {
+    document.body.style.backgroundColor = 'red';
+};
+document.getElementById('button').onclick = function () {
+    document.body.style.backgroundColor = 'green';
+};
+```
+*Fixed with:*
+```javascript
+document.getElementById('button').onclick = function (event) {
+    event.stopPropagation();
+    document.body.style.backgroundColor = 'green';
+};
+```
+---
+
+class: center, middle
+# Creating and dispatching events
+---
+
+# Creating events
+```javascript
+var clickEvt = new Event('keypress');
+```
+Custom events
+```javascript
+var myCustomEvt = new CustomEvent('custom', { 'name' : 'Fred' });
+```
+Built-in events
+```javascript
+var event = new MouseEvent('click', {
+    'view': window,
+    'bubbles': true,
+    'cancelable': true
+});
+```
+---
+
+# Dispatching events
+```javascript
+not_canceled = target.dispatchEvent(event)
+```
+* *event* is the Event object to be dispatched.
+* *target* is used to initialize the Event.target and determine which event listeners to invoke.
+* <i class="icon-warning-sign"></i> *not_canceled* is false if at least one of the event handlers which handled this event
+  called Event.preventDefault(). Otherwise it returns true.
+
+```javascript
+var btn = document.getElementById('btn-save');
+var click = new Event('click');
+btn.dispatchEvent(click);
+```
+---
+
+class: center, middle
+# Removing event listeners
+---
+
+# Removing event listeners
+```javascript
+target.removeEventListener(type, listener, useCapture)
+```
+
+* *type* - A string representing the event type being removed.
+* *listener* - The listener parameter indicates the EventListener function to be removed.
+* *useCapture* (**Almost Optional**) - Specifies whether the EventListener being removed was registered as a capturing listener or not/
+  If not specified, useCapture defaults to false. If a listener was registered twice, one with capture and one without,
+  each must be removed separately. Removal of a capturing listener does not affect a non-capturing version of the same listener,
+  and vice versa.
+
+<i class="icon-warning-sign"></i> IE 6-8 **element.detachEvent**
+---
+
+class: center, middle
+# Event tips
+---
+
+# Event usage
+```html
+<div id="staff">
+    <div>
+        <span>Fred</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+    <div>
+        <span>Mike</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+    <div>
+        <span>Alice</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+</div>
+```
+```javascript
+var links = document.querySelectorAll('.empl-delete');
+Array.prototype.forEach.call(links, function (link) {
+    link.onclick = function () {
+        document.getElementById('staff').removeChild(this.parentElement);
+    };
+});
+```
+<i class="icon-frown"></i> Very bad solution
+---
+
+# Event delegation
+```html
+<div id="staff">
+    <div>
+        <span>Fred</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+    <div>
+        <span>Mike</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+    <div>
+        <span>Alice</span>
+        <a class="empl-delete" href="javascript:void(0)">Delete</a>
+    </div>
+</div>
+```
+```javascript
+var staff = document.getElementById('staff');
+staff.onclick = function (e) {
+    if (!(e.target instanceof HTMLAnchorElement)) return;
+    staff.removeChild(e.target.parentElement);
+};
+```
+---
+
+# More on events
+* Any exceptions thrown inside an EventListener will not stop propagation of the event.
+* Exceptions in EventListener don't propagate to parent scope
+
+```javascript
+elem.onclick = function () {
+    throw { 'error' : 'Some error' };
+};
+elem.dispatchEvent(new Event('click'));
+alert('Handling');
+```
+* Returning *false* from EventListener
+
+```javascript
+elem.onclick = function() {
+    // some code
+    return false;
+};
+```
+http://www.w3.org/html/wg/drafts/html/master/webappapis.html#the-event-handler-processing-algorithm
+---
+
+class: center, middle
+# DOM API Gotchas
+---
+
+# Creating multiple elements
+```html
+<div class="employee">
+    <span>Employee name</span>
+</div>
+```
+```javascript
+var employees = ['Fred', 'Mike', 'Alice'];
+employees.forEach(function (name) {
+    var div = document.createElement('div');
+    div.classList.add('employee');
+    var span = document.createElement('span');
+    span.textContent = name;
+    div.appendChild(span);
+    document.body.appendChild(div);
+});
+```
+<i class="icon-frown"></i> Very slow
+---
+
+# Creating multiple elements faster
+```html
+<div class="employee">
+    <span>Employee name</span>
+</div>
+```
+```javascript
+var employees = ['Fred', 'Mike', 'Alice'];
+var template = '<div class="employee"><span>{name}</span></div>';
+var result = '';
+employees.forEach(function (name) {
+    result += template.replace('{name}', name);
+});
+document.body.innerHTML = result;
+```
+
+http://jsperf.com/create-element-vs-string
+
+<i class="icon-info-sign"></i> Use templating engines.
+---
+
+# Resources
+* https://developer.mozilla.org/en-US/docs/DOM (MDN)
+* http://www.w3.org/DOM/ (W3C DOM)
+    </textarea>
+    <footer>
+        <i class="icon-time"></i> <span id="time"></span>
+    </footer>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.4.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var slideshow = remark.create({
+            highlightLanguage : 'javascript',
+            highlightStyle : 'vs'
+        });
+    </script>
+    <script src="scripts/time.js"></script>
+    </body>
+</html>
